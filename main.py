@@ -1,18 +1,11 @@
 from threading import Thread
-
-import cProfile
-
-from DirectoryListener import ScanDirectory
+from directory_listener import ScanDirectory
 
 
-
-def initDirectoryListener():
-    scan = ScanDirectory()
-    scan.run()
+def init_directory_listener():
+    scanner = ScanDirectory()
+    scanner.run()
 
 
 if __name__ == '__main__':
-    Thread(target=initDirectoryListener).start()
-
-
-
+    Thread(target=init_directory_listener).start()

@@ -1,23 +1,21 @@
 import time
-from ImageOperator import proceed
-
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
+from image_operator import ImageOperator
 
 
 class ScanDirectory:
-    with open("Directory") as fp:
-        watchDirectory = fp.readline().strip()
-        print(f'Watching for the directory: {watchDirectory}')
-
     def __init__(self):
         self.observer = Observer()
+        with open("Directory") as fp:
+            self.watch_directory = fp.readline().strip()
+            print(f'Watching for the directory: {self.watch_directory}')
 
     def run(self):
         event_handler = Handler()
-        self.observer.schedule(event_handler, self.watchDirectory, recursive=True)
+        self.observer.schedule(event_handler, self.watch_directory, recursive=True)
         self.observer.start()
         try:
             while True:
@@ -37,8 +35,9 @@ class Handler(FileSystemEventHandler):
 
         elif event.event_type == 'created':
             print("Received new image: " + event.src_path)
-            currentImagePath = event.src_path
 
-            proceed(path=currentImagePath)
+            current_image_path = event.src_path
+            current_image_operator = ImageOperator(current_image_path)
+            current_image_operator.process_new_image()
 
-
+            print(current_image_operator.face_encodings)
