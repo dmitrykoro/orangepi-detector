@@ -1,4 +1,5 @@
 import time
+import logging
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -11,7 +12,7 @@ class ScanDirectory:
         self.observer = Observer()
         with open("Directory") as fp:
             self.watch_directory = fp.readline().strip()
-            print(f'Watching for the directory: {self.watch_directory}')
+            logging.warning(f'Watching for the directory: {self.watch_directory}')
 
     def run(self):
         event_handler = Handler()
@@ -22,7 +23,7 @@ class ScanDirectory:
                 time.sleep(5)
         except:
             self.observer.stop()
-            print("Observer Stopped")
+            logging.warning("Observer Stopped")
 
         self.observer.join()
 
@@ -34,10 +35,10 @@ class Handler(FileSystemEventHandler):
             return None
 
         elif event.event_type == 'created':
-            print("Received new image: " + event.src_path)
+            logging.warning("Received new image: " + event.src_path)
 
             current_image_path = event.src_path
             current_image_operator = ImageOperator(current_image_path)
             current_image_operator.process_new_image()
 
-            print(current_image_operator.face_encodings)
+
