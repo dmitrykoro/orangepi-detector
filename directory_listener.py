@@ -5,14 +5,17 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 from image_operator import ImageOperator
+from service_parameters_parser import BaseServiceParameters
 
 
-class ScanDirectory:
+class ScanDirectory(BaseServiceParameters):
     def __init__(self):
+        super().__init__()
+
         self.observer = Observer()
-        with open("Directory") as fp:
-            self.watch_directory = fp.readline().strip()
-            logging.warning(f'Listening the directory {self.watch_directory}')
+        self.watch_directory = self.path_to_images
+
+        logging.warning(f'Listening the directory {self.watch_directory}')
 
     def run(self):
         event_handler = Handler()
