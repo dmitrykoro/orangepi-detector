@@ -18,7 +18,7 @@ class ScanDirectory(BaseServiceParameters):
         logging.warning(f'Listening the directory {self.watch_directory}')
 
     def run(self):
-        event_handler = Handler()
+        event_handler = Handler(self.server_params)
         self.observer.schedule(event_handler, self.watch_directory, recursive=True)
         self.observer.start()
         try:
@@ -26,22 +26,40 @@ class ScanDirectory(BaseServiceParameters):
                 time.sleep(5)
         except:
             self.observer.stop()
-            logging.warning("Observer Stopped")
+            logging.warning('Observer Stopped')
 
         self.observer.join()
 
 
 class Handler(FileSystemEventHandler):
-    @staticmethod
-    def on_any_event(event):
+    def __init__(self, server_params):
+        self.server_params = server_params
+
+    @classmethod
+    def init(cls, server_params):
+        return Handler(server_params=server_params)
+
+    @property
+    def server_params(self):
+        return self._server_params
+
+    @server_params.setter
+    def server_params(self, value):
+        self._server_params = value
+
+    def on_any_event(self, event, **kwargs):
         if event.is_directory:
             return None
 
         elif event.event_type == 'created':
-            logging.warning("Received new image: " + event.src_path)
+            logging.warning(f'Received new image {event.src_path}')
 
             current_image_path = event.src_path
-            current_image_operator = ImageOperator(current_image_path)
+            current_image_operator = ImageOperator(current_image_path, self.server_params)
             current_image_operator.process_new_image()
+
+            del current_image_operator
+
+
 
 
