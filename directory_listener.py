@@ -12,7 +12,7 @@ class ScanDirectory:
         self.observer = Observer()
         with open("Directory") as fp:
             self.watch_directory = fp.readline().strip()
-            logging.warning(f'Watching for the directory: {self.watch_directory}')
+            logging.warning(f'Listening the directory {self.watch_directory}')
 
     def run(self):
         event_handler = Handler()
