@@ -1,18 +1,6 @@
-from threading import Thread
-
-import cProfile
-
-from DirectoryListener import ScanDirectory
-
-
-
-def initDirectoryListener():
-    scan = ScanDirectory()
-    scan.run()
+import directory_listener
 
 
 if __name__ == '__main__':
-    Thread(target=initDirectoryListener).start()
-
-
-
+    scanner = directory_listener.ScanDirectory()
+    scanner.run()
