@@ -1,3 +1,5 @@
+import subprocess
+
 import cv2
 import face_recognition
 
@@ -59,6 +61,7 @@ class ImageOperator:
         if number_of_detected_faces:
             for x, y, w, h in face_locations_cv2:
                 self.face_locations.append([(y, x + w, y + h, x)])
+        logging.warning(f'Face locations transformed: {self.face_locations}')
         return
 
     def encode_faces(self):
@@ -75,6 +78,17 @@ class ImageOperator:
             except Exception as e:
                 logging.error(f'Exception occurred while making encoding for the image {self._path_to_image}. '
                               f'Exception: {e}')
+        return
+
+    def encode_faces_binary(self):
+        output = subprocess.run(["./dnn_face_recognition_ex", self.path_to_image], stdout=subprocess.PIPE, universal_newlines=True).stdout
+
+        self.face_encodings = output
+
+        #print(type(output))
+        #output.kill()
+        #output.terminate()
+
         return
 
     def delete_source_image(self):
@@ -105,7 +119,8 @@ class ImageOperator:
 
     def process_new_image(self):
         self.locate_faces()
-        self.encode_faces()
+        #self.encode_faces()
+        self.encode_faces_binary()
         self.delete_source_image()
         self.send_encodings_to_server()
 
