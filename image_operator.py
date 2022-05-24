@@ -119,8 +119,8 @@ class ImageOperator:
 
     def process_new_image(self):
         self.locate_faces()
-        #self.encode_faces()
-        self.encode_faces_binary()
+        self.encode_faces()
+        #self.encode_faces_binary()
         self.delete_source_image()
         self.send_encodings_to_server()
 
