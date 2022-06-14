@@ -1,3 +1,4 @@
+import json
 import subprocess
 
 import logging
@@ -52,7 +53,8 @@ class ImageOperator:
             'user-agent': 'orangepi-zero',
             'authorization': auth_token
         }
-        data = {'data': self.face_encodings}
+        #data = {'data': self.face_encodings}
+        data = json.dumps(self.face_encodings)
 
         try:
             requests.post(address, headers=headers, data=data)
